@@ -31,7 +31,20 @@ function search() {
     
     // Send the request to the API server,
     // and invoke onSearchRepsonse() with the response.
-    request.execute(onSearchResponse);
+    request.execute(getLocations);
+}
+
+function getLocations(rJSON){
+    var rItems = rJSON.items;
+    console.log(rItems);
+    var rLength = rItems.length;
+    console.log(rLength);
+    var rIds =[];
+    for (var i=0; i < rLength; i++){
+        rIds.push(rItems[i].id.videoId);
+    }
+    console.log(rIds);
+    showResponse(rIds.toString());
 }
 
 // Called automatically with the response of the YouTube API request.
