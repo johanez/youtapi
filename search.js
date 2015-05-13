@@ -3,7 +3,7 @@
 
 // Helper function to display JavaScript value on HTML page.
 function showResponse(response) {
-    var responseString = JSON.stringify(response, '', 2);
+    var responseString = response; //JSON.stringify(response, '', 2); 
     document.getElementById('response').innerHTML += responseString;
 }
 
@@ -24,10 +24,9 @@ function onYouTubeApiLoad() {
 function search() {
     // Use the JavaScript client library to create a search.list() API call.
     var request = gapi.client.youtube.search.list({
-        part: 'snippet',
-        q: "Mammals",
-        location : "(4.7, 52)",
-        locationRadius : "100km"
+        part: 'id',
+        kind: "youtube#video",
+        q: "Mammals"
     });
     
     // Send the request to the API server,
@@ -37,5 +36,14 @@ function search() {
 
 // Called automatically with the response of the YouTube API request.
 function onSearchResponse(response) {
-    showResponse(response);
+    var rItems = response.items;
+    console.log(rItems);
+    var rLength = rItems.length;
+    console.log(rLength);
+    var rString ="";
+     for (var i=0; i < rLength; i++){
+         rString = rString + ", "+ rItems[i].id.videoId;
+     }
+     console.log(rString);
+    showResponse(rString);
 }
