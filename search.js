@@ -3,7 +3,7 @@
 
 // Helper function to display JavaScript value on HTML page.
 function showResponse(response) {
-    var responseString = response; //JSON.stringify(response, '', 2); 
+    var responseString = JSON.stringify(response, '', 2);  //response; 
     document.getElementById('response').innerHTML += responseString;
 }
 
@@ -26,7 +26,7 @@ function search() {
     var request = gapi.client.youtube.search.list({
         part: 'id',
         kind: "youtube#video",
-        q: "Mammals"
+        q: "Future"
     });
     
     // Send the request to the API server,
@@ -35,6 +35,8 @@ function search() {
 }
 
 function getLocations(rJSON){
+
+    /*extract video ids*/
     var rItems = rJSON.items;
     console.log(rItems);
     var rLength = rItems.length;
@@ -44,7 +46,13 @@ function getLocations(rJSON){
         rIds.push(rItems[i].id.videoId);
     }
     console.log(rIds);
-    showResponse(rIds.toString());
+    
+    /* get more information for each video id */
+    var request = gapi.client.youtube.videos.list({
+        id: rIds.join(),
+        part: 'recordingDetails'
+    });
+    request.execute(convertLocations)
 }
 
 // Called automatically with the response of the YouTube API request.
@@ -58,5 +66,10 @@ function onSearchResponse(response) {
          rString = rString + ", "+ rItems[i].id.videoId;
      }
      console.log(rString);
-    showResponse(rString);
+    //showResponse(rString);
+}
+
+function convertLocations(vJSON) {
+    console.log(JSON.stringify(vJSON, '', 2)); 
+    showResponse(vJSON)
 }
